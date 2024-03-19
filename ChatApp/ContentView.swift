@@ -2,23 +2,59 @@
 //  ContentView.swift
 //  ChatApp
 //
-//  Created by Shah, Om on 3/18/24.
+//  Created by Shah, Om on 2/14/24.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct MessageView: View {
+    @State private var messageText = ""
+    @State private var messages: [String] = []
+
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            List(messages, id: \.self) { message in
+                HStack {
+                    Image(systemName: "person.crop.circle")
+                        .font(.title)
+                    Text(message)
+                }
+            }
+            .padding()
+
+            HStack {
+                TextField("Type a message", text: $messageText)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+
+                Button(action: sendMessage) {
+                    Image(systemName: "arrow.up.circle")
+                        .font(.title)
+                        .padding()
+                }
+            }
         }
-        .padding()
+        .navigationTitle("Chat App")
+    }
+
+    private func sendMessage() {
+        guard !messageText.isEmpty else { return }
+        messages.append(messageText)
+        messageText = ""
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView: View {
+    var body: some View {
+        NavigationView {
+            MessageView()
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
